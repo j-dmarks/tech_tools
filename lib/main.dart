@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:msix/msix.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'password_provider.dart';// Import the PassWord page
-import 'package:updat/updat.dart';
+import 'package:updat/updat_window_manager.dart';
 import 'theme_provider.dart';// Import the ThemeProvider class
 import 'checksum.dart';
 import 'pass_word.dart'; 
@@ -119,20 +122,7 @@ class HomePageState extends State<HomePage> {
         icon: const Icon(Icons.menu),
         onPressed: () => _scaffoldKey.currentState?.openDrawer(),
       ),
-      actions: [
-        UpdatWidget(
-          currentVersion: "1.0.1",
-          getLatestVersion: () async {
-            // Here you should fetch the latest version. It must be semantic versioning for update detection to work properly.
-            return _appVersion;
-          },
-          getBinaryUrl: (latestVersion) async {
-            // Here you provide the link to the binary the user should download. Make sure it is the correct one for the platform!
-            return "https://github.com/latest/release/bin.exe";
-          },
-          // Lastly, enter your app name so we know what to call your files.
-          appName: "Updat Example",
-        ),
+      actions: [        
         IconButton(
           icon: Icon(themeProvider.themeMode == ThemeMode.light
               ? Icons.dark_mode
