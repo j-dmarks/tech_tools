@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'password_provider.dart';// Import the PassWord page
+import 'src/providers/password_provider.dart';// Import the PassWord page
 import 'package:updat/updat.dart';
 import 'package:http/http.dart'as http;
 import 'dart:convert';
-import 'theme_provider.dart';// Import the ThemeProvider class
-import 'checksum.dart';
-import 'pass_word.dart'; 
-import 'global_hotkey_manager.dart';
-import 'sip2.dart';
-import 'ncip.dart';
-import 'license_gen.dart';
+import 'src/providers/theme_provider.dart';// Import the ThemeProvider class
+import 'src/screens/checksum.dart';
+import 'src/screens/pass_word.dart'; 
+import 'src/screens/global_hotkey_manager.dart';
+import 'src/screens/sip2.dart';
+import 'src/screens/ncip.dart';
+import 'src/screens/license_gen.dart';
 
 void main() {
   runApp(

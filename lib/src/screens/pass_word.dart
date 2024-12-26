@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'password_provider.dart';
+import '../providers/password_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:cron/cron.dart';
