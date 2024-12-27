@@ -174,7 +174,9 @@ class SIP2TestPageState extends State<SIP2TestPage> {
 
   void _updateResponse(String response) {
     setState(() {
+      
       _responseController.text += '$response\n';
+      
     });
   }
 

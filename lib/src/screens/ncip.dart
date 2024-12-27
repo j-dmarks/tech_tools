@@ -105,7 +105,7 @@ class SendPostXMLState extends State<SendPostXML> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NCIP POST Request'),
+        title: const Text('NCIP Connection Tester'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

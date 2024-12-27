@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'src/providers/password_provider.dart';// Import the PassWord page
+import 'src/providers/password_provider.dart'; // Import the PassWord page
 import 'package:updat/updat.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'src/providers/theme_provider.dart';// Import the ThemeProvider class
+import 'src/providers/theme_provider.dart'; // Import the ThemeProvider class
 import 'src/screens/checksum.dart';
 import 'src/screens/pass_word.dart'; 
 import 'src/screens/global_hotkey_manager.dart';
@@ -20,7 +20,6 @@ void main() {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => PasswordProvider()),
       ],
-
       child: const MyApp(),
     ),
   );
@@ -28,7 +27,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -38,9 +37,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(color: Colors.lightBlue),
-        
       ),
-      
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
@@ -53,7 +50,6 @@ class MyApp extends StatelessWidget {
         GlobalHotkeyManager().registerHotkeys(() {
           Provider.of<PasswordProvider>(context, listen: false)
               .copyToClipboard(context);
-          
         });
         return child ?? const SizedBox.shrink();
       }
@@ -72,30 +68,29 @@ class HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _appVersion = '';
   int _selectedPageIndex = 0;
-  
 
   final List<Widget> _pages = [
     const PasswordFetcherScreen(),
     const Mod10CheckDigitScreen(),
     const SIP2TestPage(),
-    const SendPostXML(), // Ensure this class is defined in ncip.dart
+    const SendPostXML(),
     const LicenseGen(),
   ];
 
-  final List<String> _pageTitles = [
-        "Password Fetcher",
-        "Mod 10 Checksum",
-        "Sip2 Tester",
-        "NCIP Tester",
-        "License Generator",
-        
-        
-      ];
+  final List<Map<String, dynamic>> _pageItems = [
+    {'title': "Password Fetcher", 'icon': Icons.key},
+    {'title': "Mod 10 Checksum", 'icon': Icons.calculate},
+    {'title': "Sip2 Tester", 'icon': Icons.computer},
+    {'title': "NCIP Tester", 'icon': Icons.library_books},
+    {'title': "License Generator", 'icon': Icons.code},
+  ];
+
   @override
   void initState() {
     super.initState();
     _loadAppVersion();
   }
+
   Future<void> _loadAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
     setState(() {
@@ -112,61 +107,58 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-  final themeProvider = Provider.of<ThemeProvider>(context);
-  return Scaffold(
-    key: _scaffoldKey,
-    appBar: AppBar(
-      title: const Text('Tech Support Tools'),
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-      ),
-      actions: [
-        UpdatWidget(
-          currentVersion: "1.1.4",
-          getLatestVersion: () async {
-            // Here you should fetch the latest version. It must be semantic versioning for update detection to work properly.
-            final data = await http.get(Uri.parse("https://api.github.com/repos/j-dmarks/tech_tools/releases/latest"));
-            return jsonDecode(data.body)['tag_name'];
-          },
-          getBinaryUrl: (latestVersion) async {
-            // Here you provide the link to the binary the user should download. Make sure it is the correct one for the platform!
-            return "https://github.com/j-dmarks/tech_tools/releases/latest/download/tech_tools_setup.exe";
-          },
-          // Lastly, enter your app name so we know what to call your files.
-          appName: "tech_tools",
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Tech Support Tools'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
-        IconButton(
-          icon: Icon(themeProvider.themeMode == ThemeMode.light
-              ? Icons.dark_mode
-              : Icons.light_mode),
-          onPressed: () => themeProvider.toggleTheme(),
-        ),
-      ],
-    ),
-    drawer: Drawer(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _pageTitles.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_pageTitles[index]),
-                  onTap: () => _selectPage(index),
-                );
-              },
-            ),
+        actions: [
+          UpdatWidget(
+            currentVersion: "1.1.5",
+            getLatestVersion: () async {
+              final data = await http.get(Uri.parse("https://api.github.com/repos/j-dmarks/tech_tools/releases/latest"));
+              return jsonDecode(data.body)['tag_name'];
+            },
+            getBinaryUrl: (latestVersion) async {
+              return "https://github.com/j-dmarks/tech_tools/releases/latest/download/tech_tools_setup.exe";
+            },
+            appName: "tech_tools",
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Version: $_appVersion'),
+          IconButton(
+            icon: Icon(themeProvider.themeMode == ThemeMode.light
+                ? Icons.dark_mode
+                : Icons.light_mode),
+            onPressed: () => themeProvider.toggleTheme(),
           ),
         ],
       ),
-    ),
-    
-    body: _pages[_selectedPageIndex],
-  );
-}
+      drawer: Drawer(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: _pageItems.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(_pageItems[index]['icon']),
+                    title: Text(_pageItems[index]['title']),
+                    onTap: () => _selectPage(index),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('Version: $_appVersion'),
+            ),
+          ],
+        ),
+      ),
+      body: _pages[_selectedPageIndex],
+    );
+  }
 }
