@@ -110,9 +110,15 @@ class PasswordFetcherScreenState extends State<PasswordFetcherScreen> {
                       },
                       child: const Text('Copy Password'),
                     ),
+                    ElevatedButton(
+                      onPressed: (){
+                        Provider.of<PasswordProvider>(context, listen: false)
+                            .copyToClipboard(context);
+                            }, child: const Text('Copy BSI Password'),
+                    ),
                     const SizedBox(height: 10),
                     const Text(
-                      'Press Ctrl + Q to copy the password',
+                      'Press Ctrl + Q to copy the server password\n Press fn + B to copy the BSI password',
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 14,

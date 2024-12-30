@@ -51,6 +51,10 @@ class MyApp extends StatelessWidget {
           Provider.of<PasswordProvider>(context, listen: false)
               .copyToClipboard(context);
         });
+        GlobalHotkeyManager().registerbsi(() {
+          Provider.of<PasswordProvider>(context, listen: false)
+              .copyToClipboardBSI(context);
+        });
         return child ?? const SizedBox.shrink();
       }
     );
@@ -118,7 +122,7 @@ class HomePageState extends State<HomePage> {
         ),
         actions: [
           UpdatWidget(
-            currentVersion: "1.1.5",
+            currentVersion: '1.1.10',
             getLatestVersion: () async {
               final data = await http.get(Uri.parse("https://api.github.com/repos/j-dmarks/tech_tools/releases/latest"));
               return jsonDecode(data.body)['tag_name'];

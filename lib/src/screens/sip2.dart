@@ -20,14 +20,12 @@ class SIP2TestPageState extends State<SIP2TestPage> {
 
   String generateTimestamp() {
     DateTime now = DateTime.now();
-
     String year = now.year.toString(); 
     String month = now.month.toString().padLeft(2, '0');
     String day = now.day.toString().padLeft(2, '0');
     String hour = now.hour.toString().padLeft(2, '0');
     String minute = now.minute.toString().padLeft(2, '0');
     String second = now.second.toString().padLeft(2, '0');
-
     return '$year$month$day$hour$minute$second';
   }
 
@@ -40,7 +38,6 @@ class SIP2TestPageState extends State<SIP2TestPage> {
   @override
   void initState() {
     super.initState();
-
     _templateFields = {
       'Patron Status': [
         Row(
@@ -81,7 +78,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
   }
 
   Future<void> _connectToServer() async {
-    String server = _serverController.text;
+    String server = _serverController.text.trim();
     int port = int.tryParse(_portController.text) ?? 0;
 
     if (server.isEmpty || port == 0) {
@@ -95,11 +92,10 @@ class SIP2TestPageState extends State<SIP2TestPage> {
 
     try {
       _socket = await Socket.connect(server, port, timeout: const Duration(seconds: 5));
-
       _socket!.listen(
         (data) {
           String response = String.fromCharCodes(data);
-          _updateResponse('Received: $response');
+          _updateResponse('<<<$response');
         },
         onError: (error) {
           _updateResponse('Connection Error: $error');
@@ -112,8 +108,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
         },
         cancelOnError: true,
       );
-
-      _updateResponse('Connected to $server:$port.');
+      _updateResponse('\nConnected to $server:$port.');
     } catch (e) {
       _updateResponse('Error: $e');
     } finally {
@@ -128,12 +123,10 @@ class SIP2TestPageState extends State<SIP2TestPage> {
       _updateResponse('Error: Not connected to the server.');
       return;
     }
-
     String loginMessage = _buildLoginMessage();
-
     try {
       _socket!.write('$loginMessage\r');
-      _updateResponse('Login message sent: $loginMessage');
+      _updateResponse('\n>>>$loginMessage\n');
     } catch (e) {
       _updateResponse('Error sending login message: $e');
     }
@@ -148,12 +141,10 @@ class SIP2TestPageState extends State<SIP2TestPage> {
       _updateResponse('Error: Not connected to the server.');
       return;
     }
-
     String message = _buildMessage();
-
     try {
       _socket!.write('$message\r');
-      _updateResponse('Message sent: $message');
+      _updateResponse('\n>>>$message');
     } catch (e) {
       _updateResponse('Error sending message: $e');
     }
@@ -173,11 +164,45 @@ class SIP2TestPageState extends State<SIP2TestPage> {
   }
 
   void _updateResponse(String response) {
-    setState(() {
-      
-      _responseController.text += '$response\n';
-      
-    });
+    
+    final Map<int, String> positionMeanings = {
+      1: "Charge Privileges Denied",
+      2: "Renewal Privileges Denied",
+      3: "Recall Privileges Denied",
+      4: "Hold Privileges Denied",
+      5: "Card Reported Lost",
+      6: "Too Many Items Charged",
+      7: "Too Many Items Overdue",
+      8: "Too Many Renewals",
+      9: "Too Many Claims of Items Returned",
+      10: "Too Many Items Lost",
+      11: "Excessive Outstanding Fines",
+      12: "Excessive Outstanding Fees",
+      13: "Recall Overdue",
+      14: "Too Many Items Billed",
+    };
+
+    final pattern = RegExp(r'24(.+?)AA');
+    final match = pattern.firstMatch(response);
+    if (match != null) {
+      _responseController.text += "$response";
+      final extractedData = match.group(1)?.trim();
+      if (extractedData != null) {
+        String parsedInfo = "\n";
+        for (int position in positionMeanings.keys) {
+          if (position - 1 < extractedData.length && extractedData[position - 1] == 'Y') {
+            parsedInfo += "Block ${position - 1}: ${positionMeanings[position]}\n";
+          }
+        }
+        setState(() {
+          _responseController.text += "$parsedInfo";
+        });
+      }
+    } else {
+      setState(() {
+        _responseController.text += " $response";
+      });
+    }
   }
 
   @override
@@ -201,6 +226,9 @@ class SIP2TestPageState extends State<SIP2TestPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 10),          
+                    
+                  
                   const SizedBox(width: 10),
                   Expanded(
                     child: TextField(

@@ -11,15 +11,30 @@ class GlobalHotkeyManager {
   GlobalHotkeyManager._internal();
 
   Future<void> registerHotkeys(VoidCallback onHotKeyPressed) async {
-    final hotKey = HotKey(
+    HotKey hotKey = HotKey(
       key: PhysicalKeyboardKey.keyQ,
       modifiers: [HotKeyModifier.control],
+      scope: HotKeyScope.system,
+    );   
+    
+    await hotKeyManager.register(
+      hotKey,
+      keyDownHandler: (hotKey) {
+        onHotKeyPressed();
+      },
+    );
+  }
+
+Future<void> registerbsi(VoidCallback onHotKeyPressed) async {
+    HotKey hotKeyBSI = HotKey(
+      key: PhysicalKeyboardKey.keyB,
+      modifiers: [HotKeyModifier.alt],
       scope: HotKeyScope.system,
     );
 
     await hotKeyManager.register(
-      hotKey,
-      keyDownHandler: (hotKey) {
+      hotKeyBSI, 
+      keyDownHandler: (hotKeyBSI) {
         onHotKeyPressed();
       },
     );
