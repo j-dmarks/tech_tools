@@ -12,6 +12,7 @@ import 'src/screens/global_hotkey_manager.dart';
 import 'src/screens/sip2.dart';
 import 'src/screens/ncip.dart';
 import 'src/screens/license_gen.dart';
+import 'src/screens/command_list_page.dart';
 
 void main() {
   runApp(
@@ -79,6 +80,7 @@ class HomePageState extends State<HomePage> {
     const SIP2TestPage(),
     const SendPostXML(),
     const LicenseGen(),
+    const CommandListPage(),
   ];
 
   final List<Map<String, dynamic>> _pageItems = [
@@ -87,6 +89,7 @@ class HomePageState extends State<HomePage> {
     {'title': "Sip2 Tester", 'icon': Icons.computer},
     {'title': "NCIP Tester", 'icon': Icons.library_books},
     {'title': "License Generator", 'icon': Icons.code},
+    {'title': "SQL Commands", 'icon': Icons.list},
   ];
 
   @override
@@ -122,7 +125,7 @@ class HomePageState extends State<HomePage> {
         ),
         actions: [
           UpdatWidget(
-            currentVersion: '1.1.10',
+            currentVersion: "1.2.0",
             getLatestVersion: () async {
               final data = await http.get(Uri.parse("https://api.github.com/repos/j-dmarks/tech_tools/releases/latest"));
               return jsonDecode(data.body)['tag_name'];

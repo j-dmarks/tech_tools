@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<commands>
+  <command>
+    <title>Select All</title>
+    <description>Select All</description>
+    <sql>select * from patron_base;</sql>
+  </command>
+  <command>
+    <title>Merge Duplicate Patrons</title>
+    <description>Only Use if entire Patron Name (may include Middle) and Nickname exists for the dupes, keeps LAST ADDED RECORD</description>
+    <sql>CREATE or replace FUNCTION mergePatronsWithSameNameAndBirthdate() RETURNS text AS $$ DECLARE cus1 CURSOR FOR Select patronid, patronname, birthdate, lastname from Patron order by upper(trim(BOTH ' ' FROM replace(patronname, '.', ''))), birthdate, patroncreationdate DESC, patronid; mainid integer; mainbirthdate timestamp; mainname text; mainlastname text; compareName text; responseMsg text; removeIDs text := ''; rec record; BEGIN responseMsg := ''; comparename := ''; OPEN cus1; LOOP FETCH cus1 INTO mainid, mainname, mainbirthdate, mainlastname; IF mainid IS NOT null then if upper(trim(BOTH ' ' FROM replace(mainname, '.', ''))) != comparename then compareName := upper(trim(BOTH ' ' FROM replace(mainname, '.', ''))); FOR rec IN SELECT * FROM Patron WHERE ((mainid != Patron.patronid) AND (upper(trim(BOTH ' ' FROM replace(Patron.patronname, '.', ''))) = compareName) AND (Patron.birthdate = mainbirthdate)) LOOP UPDATE Reserves_base SET patronid = mainid WHERE patronid = rec.patronid; UPDATE Circulation_base SET patronid = mainid WHERE patronid = rec.patronid; UPDATE History_base SET patronid = mainid WHERE patronid = rec.patronid; UPDATE Fines SET patronid = mainid WHERE patronid = rec.patronid; UPDATE Booklists SET patronid = mainid WHERE patronid = rec.patronid; IF removeIDs != '' THEN removeIDs := removeIDs || ', '; END IF; removeIDs := removeIDs || rec.patronid::text; responseMsg := responseMsg || E'\nMerged Patron = ' || mainname; END LOOP; END IF; else EXIT; END IF; END LOOP; IF removeIDs != '' THEN EXECUTE 'DELETE FROM Patron WHERE Patron.PatronID IN ( ' || removeIDs || ')'; END IF; IF responseMsg = '' THEN responseMsg := 'No Patrons were merged.'; END IF; RETURN responseMsg; END; $$ LANGUAGE plpgsql; SELECT mergePatronsWithSameNameAndBirthdate(); DROP FUNCTION mergePatronsWithSameNameAndBirthdate();</sql>
+  </command>
+</commands>
