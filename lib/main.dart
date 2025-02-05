@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'src/providers/theme_provider.dart'; // Import the ThemeProvider class
 import 'src/screens/checksum.dart';
 import 'src/screens/pass_word.dart'; 
-import 'src/screens/global_hotkey_manager.dart';
+import 'src/utils/global_hotkey_manager.dart';
 import 'src/screens/sip2.dart';
 import 'src/screens/ncip.dart';
 import 'src/screens/license_gen.dart';
@@ -125,7 +125,7 @@ class HomePageState extends State<HomePage> {
         ),
         actions: [
           UpdatWidget(
-            currentVersion: "1.2.0",
+            currentVersion: "1.2.1",
             getLatestVersion: () async {
               final data = await http.get(Uri.parse("https://api.github.com/repos/j-dmarks/tech_tools/releases/latest"));
               return jsonDecode(data.body)['tag_name'];

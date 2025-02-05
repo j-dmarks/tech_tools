@@ -95,7 +95,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
       _socket!.listen(
         (data) {
           String response = String.fromCharCodes(data);
-          _updateResponse('<<<$response');
+          _updateResponse('<-$response');
         },
         onError: (error) {
           _updateResponse('Connection Error: $error');
@@ -108,7 +108,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
         },
         cancelOnError: true,
       );
-      _updateResponse('\nConnected to $server:$port.');
+      _updateResponse('\n Connected to $server:$port.\n');
     } catch (e) {
       _updateResponse('Error: $e');
     } finally {
@@ -126,7 +126,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
     String loginMessage = _buildLoginMessage();
     try {
       _socket!.write('$loginMessage\r');
-      _updateResponse('\n>>>$loginMessage\n');
+      _updateResponse('\n->$loginMessage\n');
     } catch (e) {
       _updateResponse('Error sending login message: $e');
     }
@@ -144,7 +144,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
     String message = _buildMessage();
     try {
       _socket!.write('$message\r');
-      _updateResponse('\n>>>$message');
+      _updateResponse('\n->$message \n');
     } catch (e) {
       _updateResponse('Error sending message: $e');
     }
