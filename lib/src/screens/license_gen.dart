@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter/services.dart';
@@ -13,9 +13,9 @@ class LicenseGen extends StatefulWidget {
 class LicenseGenState extends State<LicenseGen> {
   String? _selectedOption;
   String? _selectedFed;
-  String? _selectedFedExpDate;
-  String? _selectedStateStandards;
-  String? _selectedStateStandardsExpDate;
+  String? _selectedFedExpDate ;
+  String? _selectedStateStandards ;
+  String? _selectedStateStandardsExpDate ;
   bool _checkboxValue1 = false;
   bool _checkboxValue2 = false;
   bool _checkboxValue3 = false;
@@ -121,19 +121,17 @@ class LicenseGenState extends State<LicenseGen> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextFormField(                      
+                    child: TextBox(                      
                       controller: licenseTextController,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.copy),
+                      suffix: IconButton(
+                          icon: const Icon(FluentIcons.copy),
                           onPressed: () {
                             Clipboard.setData(ClipboardData(text: licenseTextController.text));                                                       
                           },
                         ),
                       ),
                     ),
-                  ),
+                
                 ],
               ));
             } else if (cells.length == 1) {
@@ -162,28 +160,27 @@ class LicenseGenState extends State<LicenseGen> {
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('License Generator'),
+    return ScaffoldPage(
+      header: const PageHeader(
+        title:  Text('License Generator'),
       ),
-      body: SingleChildScrollView(
+      content: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Wrap(
                 children: [
                   const Text('Select Option:'),
                   const SizedBox(width: 10),
-                  DropdownButton<String>(
+                  ComboBox<String>(
                     value: _selectedOption,
-                    hint: const Text('Select an option'),
+                    placeholder: const Text('Select an option'),
                     items: _optionsMap.entries.map((entry) {
-                      return DropdownMenuItem<String>(
+                      return ComboBoxItem<String>(
                         value: entry.value,
                         child: Text(entry.key),
                       );
@@ -193,13 +190,12 @@ class LicenseGenState extends State<LicenseGen> {
                   const SizedBox(width: 10),
                   const Text('Number of libraries:'),
                   const SizedBox(width: 10),
-                  Flexible(
-                    child: TextFormField(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 55, maxWidth: 100),
+                    child: TextBox(
                       controller: _numberOfLibrariesController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
+                      
                     ),
                   ),
                 ],
@@ -208,82 +204,130 @@ class LicenseGenState extends State<LicenseGen> {
               Wrap(
                 spacing: 10,
                 children: [
-                  CheckboxListTile(
-                    value: _checkboxValue1,
-                    title: const Text('Obfuscate History'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue1,
+                    content: const Text('Obfuscate History'),
                     onChanged: (value) => setState(() => _checkboxValue1 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue2,
-                    title: const Text('Authority'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue2,
+                    content: const Text('Authority'),
                     onChanged: (value) => setState(() => _checkboxValue2 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue3,
-                    title: const Text('Acquisitions'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue3,
+                    content: const Text('Acquisitions'),
                     onChanged: (value) => setState(() => _checkboxValue3 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue4,
-                    title: const Text('Serials'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue4,
+                    content: const Text('Serials'),
                     onChanged: (value) => setState(() => _checkboxValue4 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue5,
-                    title: const Text('Self Check Station'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue5,
+                    content: const Text('Self Check Station'),
                     onChanged: (value) => setState(() => _checkboxValue5 = value!),
+                  ),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
                   ),
                 ],
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  const SizedBox(width: 10),
                   const Text('Federated Searching (SURFit):'),
                   const SizedBox(width: 10),
-                  DropdownButton<String>(
+                  ComboBox<String>(
                     value: _selectedFed,
                     items: _fedMap.entries.map((entry) {
-                      return DropdownMenuItem<String>(
+                      return ComboBoxItem<String>(
                         value: entry.value,
                         child: Text(entry.key),
                       );
                     }).toList(),
                     onChanged: (newValue) => setState(() => _selectedFed = newValue),
                   ),
-                
+                  const SizedBox(width: 10),
                   const Text('Expiration Date (SURFit):'),
                   const SizedBox(width: 10),
-                  DropdownButton<String>(
+                  ComboBox<String>(
                     value: _selectedFedExpDate,
                     items: _fedExpMap.entries.map((entry) {
-                      return DropdownMenuItem<String>(
+                      return ComboBoxItem<String>(
                         value: entry.value,
                         child: Text(entry.key),
                       );
                     }).toList(),
                     onChanged: (newValue) => setState(() => _selectedFedExpDate = newValue),
                   ),
+                  const SizedBox(width: 10),
                   const Text('Number of Resolvers:'),
                   const SizedBox(width: 10),
                   Flexible(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 55),
-                      child: TextFormField(
+                      constraints: const BoxConstraints(minWidth: 55, maxWidth: 100),
+                      child: TextBox(
                         controller: _numberOfResolversController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
+                        
                       ),
                     ),
                   ),
                   const SizedBox(width: 10),
+                  
+
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children:[
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  const SizedBox(width: 10),
                   const Text('State Standards (SS):'),
                   const SizedBox(width: 10),
-                  DropdownButton<String>(
+                  ComboBox<String>(
                     value: _selectedStateStandards,
                     items: _selectedStateStandardsMap.entries.map((entry) {
-                      return DropdownMenuItem<String>(
+                      return ComboBoxItem<String>(
                         value: entry.value,
                         child: Text(entry.key),
                       );
@@ -293,57 +337,98 @@ class LicenseGenState extends State<LicenseGen> {
                   const SizedBox(width: 10),
                   const Text('Expiration Date (SS):'),
                   const SizedBox(width: 10),
-                  DropdownButton<String>(
+                  ComboBox<String>(
                     value: _selectedStateStandardsExpDate,
                     items: _selectedStateStandardsExpDateMap.entries.map((entry) {
-                      return DropdownMenuItem<String>(
+                      return ComboBoxItem<String>(
                         value: entry.value,
                         child: Text(entry.key),
                       );
                     }).toList(),
                     onChanged: (newValue) => setState(() => _selectedStateStandardsExpDate = newValue),
                   ),
-
-                ],
+                  const SizedBox(width: 10),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                ]
               ),
+              const SizedBox(height: 10),
               Wrap(
                 spacing: 10,
                 children: [
-                  CheckboxListTile(
-                    value: _checkboxValue6,
-                    title: const Text('SIF'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue6,
+                    content: const Text('SIF'),
                     onChanged: (value) => setState(() => _checkboxValue6 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue7,
-                    title: const Text('Atriuum Debt'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue7,
+                    content: const Text('Atriuum Debt'),
                     onChanged: (value) => setState(() => _checkboxValue7 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue8,
-                    title: const Text('RBS'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue8,
+                    content: const Text('RBS'),
                     onChanged: (value) => setState(() => _checkboxValue8 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue9,
-                    title: const Text('ILL'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue9,
+                    content: const Text('ILL'),
                     onChanged: (value) => setState(() => _checkboxValue9 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue10,
-                    title: const Text('Kiosk'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue10,
+                    content: const Text('Kiosk'),
                     onChanged: (value) => setState(() => _checkboxValue10 = value!),
                   ),
-                  CheckboxListTile(
-                    value: _checkboxValue11,
-                    title: const Text('PowerSchool'),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
+                  ),
+                  Checkbox(
+                    checked: _checkboxValue11,
+                    content: const Text('PowerSchool'),
                     onChanged: (value) => setState(() => _checkboxValue11 = value!),
+                  ),
+                  Container(
+                    width: 3,
+                    height: 30, // Adjust height as needed
+                    color: FluentTheme.of(context).inactiveColor,
                   ),
                 ],
               ),
               const SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
+                child: Button(
                   onPressed: _sendPayload,
                   child: const Text('Generate'),
                 ),

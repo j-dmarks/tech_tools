@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 
 
@@ -28,64 +28,52 @@ class _CommandDetailPageState extends State<CommandDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return NavigationView(
+      appBar: NavigationAppBar(
         title: const Text('Edit Command'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.copy),
-            onPressed: () {
-              Clipboard.setData(ClipboardData(text: _commandController.text));
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Command copied to clipboard')),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: widget.onDelete,
-          ),
-        ],
+        actions: Wrap(
+          children: [
+            IconButton(
+              icon: const Icon(FluentIcons.copy),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: _commandController.text));
+                
+              },
+            ),
+            IconButton(
+              icon: const Icon(FluentIcons.delete),
+              onPressed: widget.onDelete,
+            ),
+          ],
+        ),
       ),
-      body: Padding(
+      content: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            TextBox(
               controller: _titleController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Title',
-              ),
+              placeholder: 'Title',
             ),
             const SizedBox(height: 16),
-            TextField(
+            TextBox(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Description',
-              ),
+              placeholder: 'Description',
             ),
             const SizedBox(height: 16),
-            TextField(
+            TextBox(
               controller: _commandController,
               maxLines: null,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: 'SQL Command',
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: _commandController.text));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                       const SnackBar(content: Text('Command copied to clipboard')),
-                    );
-                  },
-                  icon: const Icon(Icons.copy),
-                ),
+              placeholder: 'SQL Command',
+              suffix: IconButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: _commandController.text));
+                },
+                icon: const Icon(FluentIcons.copy),
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            Button(
               onPressed: () {
                 final updatedCommand = {
                   'title': _titleController.text,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
@@ -103,45 +103,42 @@ class SendPostXMLState extends State<SendPostXML> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('NCIP Connection Tester'),
+    return ScaffoldPage(
+      header: const PageHeader(
+        title:  Text('NCIP Connection Tester'),
       ),
-      body: Padding(
+      content: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
+              TextBox(
                 controller: _hostController,
-                decoration: const InputDecoration(labelText: 'Host'),
+                placeholder: 'Host',
               ),
-              TextField(
+              TextBox(
                 controller: _portController,
-                decoration: const InputDecoration(labelText: 'Port'),
+                placeholder: 'Port',
               ),
-              TextField(
+              TextBox(
                 controller: _agencyIdController,
-                decoration: const InputDecoration(labelText: 'Agency ID'),
+                placeholder: 'Agency ID',
               ),
-              TextField(
+              TextBox(
                 controller: _patronBarcodeController,
-                decoration: const InputDecoration(labelText: 'Patron Barcode'),
+                placeholder: 'Patron Barcode',
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              Button(
                 onPressed: sendPostRequest,
-                child: const Text('Send POST Request'),
+                child: const Text('Send Request'),
               ),
               const SizedBox(height: 10,),
-              TextField(
+              TextBox(
                 controller: _responseController,
                 readOnly: true,
                 maxLines: 10,
-                decoration: const InputDecoration(
-                  labelText: 'Response',
-                  border: OutlineInputBorder(),
-                ),
+                placeholder: 'Response',
               ),
             ],
           ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 
 class AddCommandPage extends StatefulWidget {
@@ -7,50 +7,41 @@ class AddCommandPage extends StatefulWidget {
   const AddCommandPage({super.key, required this.onAddCommand});
 
   @override
-  _AddCommandPageState createState() => _AddCommandPageState();
+  AddCommandPageState createState() => AddCommandPageState();
 }
 
-class _AddCommandPageState extends State<AddCommandPage> {
+class AddCommandPageState extends State<AddCommandPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _commandController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add New Command'),
+    return NavigationView(
+      appBar: const NavigationAppBar(
+        title:  Text('Add New Command'),
       ),
-      body: SingleChildScrollView(
+      content: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            TextBox(
               controller: _titleController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Title',
-              ),
-            ),
+              placeholder: 'Title',
+              ),            
             const SizedBox(height: 16),
-            TextField(
+            TextBox(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Description',
+              placeholder: 'Description',
               ),
-            ),
             const SizedBox(height: 16),
-            TextField(
+            TextBox(
               controller: _commandController,
               maxLines: null,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'SQL Command',
+              placeholder: 'SQL Command',
               ),
-            ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            Button(
               onPressed: () {
                 final newCommand = {
                   'title': _titleController.text,

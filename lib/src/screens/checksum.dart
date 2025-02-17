@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-
+import 'package:fluent_ui/fluent_ui.dart';
 
 class Mod10CheckDigitScreen extends StatefulWidget {
   const Mod10CheckDigitScreen({super.key});
@@ -40,7 +38,7 @@ class Mod10CheckDigitScreenState extends State<Mod10CheckDigitScreen> {
       int checkDigit = calculateCheckDigit(input);
       setState(() {
         _result = "Check Digit: $checkDigit";
-        _check = "$checkDigit";
+        _check = "Full Barcode:$input$checkDigit";
       });
     } else {
       setState(() {
@@ -52,39 +50,32 @@ class Mod10CheckDigitScreenState extends State<Mod10CheckDigitScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mod 10 Check Digit Calculator'),
-        centerTitle: true,
-      ),
-      body: Padding(
+    return ScaffoldPage(
+      header: const PageHeader(title: Text('Mod 10 Check Digit Calculator')),
+      content: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
+            TextBox(
               controller: _controller,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Enter a number',
-                border: OutlineInputBorder(),
-              ),
+              placeholder: 'Enter a number',
               onSubmitted: (value) => _calculate(),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+            Button(
               onPressed: _calculate,
               child: const Text('Calculate Check Digit'),
             ),
             const SizedBox(height: 20),
             Text(
               _result,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: FluentTheme.of(context).typography.body?.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
-                const Text("Full Barcode: ", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                SelectableText(_controller.text + _check,
+                SelectableText( _check,
                     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ],
             ),

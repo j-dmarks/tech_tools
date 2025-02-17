@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:xml/xml.dart' as xml;
 import 'dart:io';
 import 'add_command_page.dart';
@@ -78,29 +78,25 @@ class _CommandListPageState extends State<CommandListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('SQL Commands'),
-      ),
-      body: ListView.builder(
+    return ScaffoldPage(
+      
+      content: ListView.builder(
         itemCount: commands.length,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(commands[index]['title']!),
             subtitle: Text(commands[index]['description']!),
             trailing: IconButton(
-              icon: const Icon(Icons.copy),
+              icon: const Icon(FluentIcons.copy),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: commands[index]['command'] ?? ''));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Command copied to clipboard')),
-                );
+                
               },
             ),
-            onTap: () {
+            onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                FluentPageRoute(
                   builder: (context) => CommandDetailPage(
                     command: commands[index],
                     onSave: (updatedCommand) => _editCommand(index, updatedCommand),
@@ -115,16 +111,19 @@ class _CommandListPageState extends State<CommandListPage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddCommandPage(onAddCommand: _addCommand),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
+      header: PageHeader(
+        title: const Text('SQL Commands'),
+        commandBar: IconButton(
+          icon: const Icon(FluentIcons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              FluentPageRoute(
+                builder: (context) => AddCommandPage(onAddCommand: _addCommand),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

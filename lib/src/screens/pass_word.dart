@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 import '../providers/password_provider.dart';
 import 'package:http/http.dart' as http;
@@ -81,14 +81,14 @@ class PasswordFetcherScreenState extends State<PasswordFetcherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Password Fetcher'),
-        centerTitle: true,
+    return ScaffoldPage(
+      header: const PageHeader(
+        title:  Text('Password Fetcher'),
+        
       ),
-      body: Center(
+      content: Center(
         child: _isLoading
-            ? const CircularProgressIndicator()
+            ? const ProgressRing()
             : Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -103,25 +103,31 @@ class PasswordFetcherScreenState extends State<PasswordFetcherScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
+                    Button(
                       onPressed: () {
                         Provider.of<PasswordProvider>(context, listen: false)
                             .copyToClipboard(context);
                       },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).navigationPaneTheme.backgroundColor),
+                      ),
                       child: const Text('Copy Password'),
                     ),
                     const SizedBox(height: 10),
-                    ElevatedButton(
+                    Button(
                       onPressed: (){
                         Provider.of<PasswordProvider>(context, listen: false)
                             .copyToClipboardBSI(context);
-                            }, child: const Text('Copy BSI Password'),
+                            }, 
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).navigationPaneTheme.backgroundColor),
+                      ),
+                            child: const Text('Copy BSI Password'),
                     ),
                     const SizedBox(height: 10),
                     const Text(
                       'Press Ctrl + Q to copy the server password\n Press Alt + B to copy the BSI password',
-                      style: TextStyle(
-                        color: Colors.grey,
+                      style: TextStyle(                        
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),

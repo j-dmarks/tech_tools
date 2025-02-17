@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:tech_tools/src/providers/bsipass.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class PasswordProvider extends ChangeNotifier {
   String _password = '';
@@ -17,13 +18,13 @@ class PasswordProvider extends ChangeNotifier {
   void copyToClipboard(BuildContext context) {
     if (_password.isNotEmpty) {
       Clipboard.setData(ClipboardData(text: _password));
-      ScaffoldMessenger.of(context);
+      
     }
   }
   void copyToClipboardBSI(BuildContext context) {
     if (_bsipassword.isNotEmpty) {
       Clipboard.setData(ClipboardData(text: _bsipassword));
-      ScaffoldMessenger.of(context);
+      
     }
   }
 }

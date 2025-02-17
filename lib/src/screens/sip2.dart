@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class SIP2TestPage extends StatefulWidget {
   const SIP2TestPage({super.key});
@@ -20,12 +20,14 @@ class SIP2TestPageState extends State<SIP2TestPage> {
 
   String generateTimestamp() {
     DateTime now = DateTime.now();
+
     String year = now.year.toString(); 
     String month = now.month.toString().padLeft(2, '0');
     String day = now.day.toString().padLeft(2, '0');
     String hour = now.hour.toString().padLeft(2, '0');
     String minute = now.minute.toString().padLeft(2, '0');
     String second = now.second.toString().padLeft(2, '0');
+
     return '$year$month$day$hour$minute$second';
   }
 
@@ -38,23 +40,24 @@ class SIP2TestPageState extends State<SIP2TestPage> {
   @override
   void initState() {
     super.initState();
+
     _templateFields = {
       'Patron Status': [
         Row(
           children: [
             Expanded(
-              child: TextField(
+              child: TextBox(
                 key: const ValueKey('barcode'),
                 controller: _barcodeController,
-                decoration: const InputDecoration(labelText: 'Barcode'),
+                placeholder: 'Barcode (Required)',
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: TextField(
+              child: TextBox(
                 key: const ValueKey('pin'),
                 controller: _pinController,
-                decoration: const InputDecoration(labelText: 'Patron Pin (If Required)'),
+                placeholder:'Patron Pin (If Required)',
               ),
             ),
           ],
@@ -78,7 +81,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
   }
 
   Future<void> _connectToServer() async {
-    String server = _serverController.text.trim();
+    String server = _serverController.text;
     int port = int.tryParse(_portController.text) ?? 0;
 
     if (server.isEmpty || port == 0) {
@@ -92,10 +95,11 @@ class SIP2TestPageState extends State<SIP2TestPage> {
 
     try {
       _socket = await Socket.connect(server, port, timeout: const Duration(seconds: 5));
+
       _socket!.listen(
         (data) {
           String response = String.fromCharCodes(data);
-          _updateResponse('<-$response');
+          _updateResponse('Received: $response');
         },
         onError: (error) {
           _updateResponse('Connection Error: $error');
@@ -108,7 +112,8 @@ class SIP2TestPageState extends State<SIP2TestPage> {
         },
         cancelOnError: true,
       );
-      _updateResponse('\n Connected to $server:$port.\n');
+
+      _updateResponse('Connected to $server:$port.');
     } catch (e) {
       _updateResponse('Error: $e');
     } finally {
@@ -123,10 +128,12 @@ class SIP2TestPageState extends State<SIP2TestPage> {
       _updateResponse('Error: Not connected to the server.');
       return;
     }
+
     String loginMessage = _buildLoginMessage();
+
     try {
       _socket!.write('$loginMessage\r');
-      _updateResponse('\n->$loginMessage\n');
+      _updateResponse('Login message sent: $loginMessage');
     } catch (e) {
       _updateResponse('Error sending login message: $e');
     }
@@ -141,10 +148,12 @@ class SIP2TestPageState extends State<SIP2TestPage> {
       _updateResponse('Error: Not connected to the server.');
       return;
     }
+
     String message = _buildMessage();
+
     try {
       _socket!.write('$message\r');
-      _updateResponse('\n->$message \n');
+      _updateResponse('Message sent: $message');
     } catch (e) {
       _updateResponse('Error sending message: $e');
     }
@@ -185,7 +194,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
     final pattern = RegExp(r'24(.+?)AA');
     final match = pattern.firstMatch(response);
     if (match != null) {
-      _responseController.text += "$response";
+      _responseController.text += response;
       final extractedData = match.group(1)?.trim();
       if (extractedData != null) {
         String parsedInfo = "\n";
@@ -195,21 +204,22 @@ class SIP2TestPageState extends State<SIP2TestPage> {
           }
         }
         setState(() {
-          _responseController.text += "$parsedInfo";
+          _responseController.text += parsedInfo;
         });
       }
     } else {
       setState(() {
-        _responseController.text += " $response";
+        _responseController.text += "$response\n";
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('SIP2 Testing Tool')),
-      body: Padding(
+    return ScaffoldPage(
+      header: const PageHeader(
+        title:  Text('SIP2 Tester'),
+      ),
+      content: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -218,25 +228,16 @@ class SIP2TestPageState extends State<SIP2TestPage> {
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextBox(
                       controller: _serverController,
-                      decoration: const InputDecoration(
-                        labelText: 'Server Address',
-                        hintText: 'e.g., 192.168.1.1',
-                      ),
+                      placeholder: 'Server Address (e.g.,library.booksys.net)'
                     ),
                   ),
-                  const SizedBox(width: 10),          
-                    
-                  
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
+                    child: TextBox(
                       controller: _portController,
-                      decoration: const InputDecoration(
-                        labelText: 'Port Number',
-                        hintText: 'e.g., 6000',
-                      ),
+                      placeholder: 'Port (e.g., 9998)',
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -244,7 +245,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
               ),
               const SizedBox(height: 10),
               Center(
-                child: ElevatedButton(
+                child: Button(
                   onPressed: _isConnecting ? null : _connectToServer,
                   child: Text(_isConnecting ? 'Connecting...' : 'Connect'),
                 ),
@@ -255,31 +256,31 @@ class SIP2TestPageState extends State<SIP2TestPage> {
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextBox(
                       controller: _usernameController,
-                      decoration: const InputDecoration(labelText: 'Username'),
+                      placeholder: 'Username',
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
+                    child: TextBox(
                       controller: _passwordController,
-                      decoration: const InputDecoration(labelText: 'Password'),
+                      placeholder: 'Password',
                       obscureText: true,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
+                    child: TextBox(
                       controller: _locationCodeController,
-                      decoration: const InputDecoration(labelText: 'Location Code'),
+                      placeholder:'Location Code',
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
+                child: Button(
                   onPressed: _login,
                   child: const Text('Login'),
                 ),
@@ -289,7 +290,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownButton<String>(
+                    child: ComboBox<String>(
                       value: _selectedTemplate,
                       onChanged: (value) {
                         setState(() {
@@ -297,7 +298,7 @@ class SIP2TestPageState extends State<SIP2TestPage> {
                         });
                       },
                       items: _templateFields.keys
-                          .map((template) => DropdownMenuItem(
+                          .map((template) => ComboBoxItem(
                                 value: template,
                                 child: Text(template),
                               ))
@@ -313,21 +314,18 @@ class SIP2TestPageState extends State<SIP2TestPage> {
 
               const SizedBox(height: 10),
               Center(
-                child: ElevatedButton(
+                child: Button(
                   onPressed: _sendMessage,
                   child: const Text('Send Message'),
                 ),
               ),
               const SizedBox(height: 20),
 
-              TextField(
+              TextBox(
                 controller: _responseController,
                 readOnly: true,
                 maxLines: 10,
-                decoration: const InputDecoration(
-                  labelText: 'Response',
-                  border: OutlineInputBorder(),
-                ),
+              
               ),
             ],
           ),

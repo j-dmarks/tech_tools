@@ -6,29 +6,28 @@ class ThemeProvider with ChangeNotifier {
 
   ThemeMode get themeMode => _themeMode;
 
+  // Constructor to load the saved theme
   ThemeProvider() {
-    _loadThemeMode();
+    _loadTheme();
   }
 
-  void toggleTheme() {
-    if (_themeMode == ThemeMode.light) {
+  // Load the theme from SharedPreferences
+  Future<void> _loadTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? theme = prefs.getString('theme');
+    if (theme != null && theme == 'dark') {
       _themeMode = ThemeMode.dark;
     } else {
       _themeMode = ThemeMode.light;
     }
-    _saveThemeMode();
     notifyListeners();
   }
 
-  void _loadThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final themeModeString = prefs.getString('themeMode') ?? 'light';
-    _themeMode = themeModeString == 'light' ? ThemeMode.light : ThemeMode.dark;
+  // Toggle theme and save the selected theme to SharedPreferences
+  Future<void> toggleTheme() async {
+    _themeMode = _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('theme', _themeMode == ThemeMode.dark ? 'dark' : 'light');
     notifyListeners();
-  }
-
-  void _saveThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('themeMode', _themeMode == ThemeMode.light ? 'light' : 'dark');
   }
 }
