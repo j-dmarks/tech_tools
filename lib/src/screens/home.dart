@@ -9,9 +9,10 @@ import 'package:updat/updat.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:updat/theme/chips/flat.dart';
+import '../sip2/screens/tabview.dart';
 
 
-const String currentVersion = "2.0.0";
+const String currentVersion = "2.1.2";
 const String appTitle = 'Tech Tools';
 Future<void> _updateAcrylicEffect(ThemeMode themeMode) async {
   if (themeMode == ThemeMode.dark) {
@@ -53,7 +54,7 @@ class MyHomePageState extends State<MyHomePage> {
     PaneItem(
       icon: const Icon(FluentIcons.server_enviroment),
       title: const Text('SIP2 Tester'),
-      body: const SIP2TestPage(),
+      body:  TabbedPage(),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.server_processes),
@@ -73,7 +74,7 @@ class MyHomePageState extends State<MyHomePage> {
     PaneItem(
       icon: const Icon(FluentIcons.code),
       title: const Text("Librista Sites"),
-      body: LibCheckScreen()
+      body: const LibCheckScreen()
     )
   ];
 
@@ -89,7 +90,7 @@ class MyHomePageState extends State<MyHomePage> {
     appBar: NavigationAppBar(
       automaticallyImplyLeading: false,
       leading: UpdatWidget(
-            currentVersion: "2.1.0",
+            currentVersion: "2.1.1",
             getLatestVersion: () async {
               final data = await http.get(Uri.parse("https://api.github.com/repos/j-dmarks/tech_tools/releases/latest"));
               return jsonDecode(data.body)['tag_name'];
@@ -155,4 +156,3 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
 } 
-

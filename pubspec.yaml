@@ -1,7 +1,7 @@
 name: tech_tools
 description: "Tech Tools for Booksystems Tech Support"
 publish_to: 'none'
-version: 2.1.0
+version: 2.1.2
 
 environment:
   sdk: ^3.5.4
@@ -22,7 +22,8 @@ dependencies:
   flutter_acrylic: ^1.1.4
   flutter_launcher_icons: ^0.14.3
   rename: ^3.0.2
-  webview_flutter: ^4.10.0
+  universal_io: ^2.2.2
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

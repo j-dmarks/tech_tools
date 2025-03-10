@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ColorProvider extends ChangeNotifier {
-  Color _selectedColor = Color.fromARGB(155, 98, 83, 233);
+  Color _selectedColor = const Color.fromARGB(155, 98, 83, 233);
   Color get selectedColor => _selectedColor;
   ColorProvider(){
     _loadColor();

@@ -4,7 +4,7 @@ import 'package:tech_tools/src/providers/index.dart';
 import 'package:tech_tools/src/utils/index.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   _settingsScreenState createState() => _settingsScreenState();
@@ -18,11 +18,11 @@ class _settingsScreenState extends State<SettingsScreen> {
       content: 
       Row(
         children: [
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Align(
             alignment: Alignment.topLeft,
             child: Button(
-            child: Text('Show Light Theme Color Picker'),
+            child: const Text('Show Light Theme Color Picker'),
             onPressed: () => _showColorPicker(context),)
           ),
         ],

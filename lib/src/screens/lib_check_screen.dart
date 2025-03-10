@@ -28,7 +28,7 @@ class _LibCheckScreenState extends State<LibCheckScreen> {
   }
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.platformDefault)) {
+    if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
       print('Could not launch $url');
     }
   }
@@ -63,6 +63,7 @@ class _LibCheckScreenState extends State<LibCheckScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const libristaURL = "https:librista.com/";
     return ScaffoldPage(
       header: const PageHeader(title: Text('Librista Sites')),
       content: Padding(
@@ -71,13 +72,18 @@ class _LibCheckScreenState extends State<LibCheckScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Fetch Libraries Button
-            Button(
-              onPressed: libsCheck,
-              child: const Text('Load libraries'),
+            Row(
+              children: [
+                Button(
+                  onPressed: libsCheck,
+                  child: const Text('Load libraries'),
+                ),
+                const SizedBox(width: 10),
+                Button(onPressed:() => _launchURL(libristaURL),
+                child: const Text("librista.com")),
+              ],
             ),
             const SizedBox(height: 10),
-
-            // Dropdown and Search Bar Row
             Row(
               children: [
                 // Dropdown for Search Parameter
@@ -119,7 +125,6 @@ class _LibCheckScreenState extends State<LibCheckScreen> {
                   final lib = _filteredLibraries[index];
                   final opacUrl = "${lib['scheme']}://${lib['hostname']}/opac/${lib["library"]}/";
                   final logonURL = "${lib['scheme']}://${lib['hostname']}/libs/${lib["library"]}/";
-                  final libristaURL = "https:librista.com/";
                   return Card(
                     child: ListTile(
                       title: Text(lib['name'] ?? 'Unknown Library'),
@@ -137,10 +142,8 @@ class _LibCheckScreenState extends State<LibCheckScreen> {
                             onPressed:() => _launchURL(logonURL),
                             child: const Text("Go to LibrarianLogON")
                             ),
-                            Button(
-                            onPressed:() => _launchURL(libristaURL),
-                            child: const Text("Go to Librista")
-                            )
+                            const SizedBox(width: 5),
+                            
                           ],
                       ), 
                       
@@ -152,11 +155,7 @@ class _LibCheckScreenState extends State<LibCheckScreen> {
             const SizedBox(height: 10),
 
             // Raw API Response Box
-            TextBox(
-              controller: _responseController,
-              placeholder: 'Raw API response will appear here',
-              maxLines: 5,
-            ),
+            
           ],
         ),
       ),

@@ -30,7 +30,7 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -71,25 +71,21 @@ class _MyAppState extends State<MyApp> {
           themeMode: themeProvider.themeMode,
           theme: FluentThemeData(
             brightness: Brightness.light,
-            accentColor: Colors.green,
-            
             scaffoldBackgroundColor: const Color.fromARGB(255, 243, 242, 241),
-            navigationPaneTheme: NavigationPaneThemeData(
-              
+            navigationPaneTheme: NavigationPaneThemeData(              
               backgroundColor: selectedColor,
-              highlightColor: const Color.fromARGB(255, 255, 153, 0),
-              
+              highlightColor: const Color.fromARGB(255, 255, 153, 0),              
             ),
           ),
           darkTheme: FluentThemeData(
             brightness: Brightness.dark,
             accentColor: Colors.blue,
             scaffoldBackgroundColor: const Color.fromARGB(255, 41, 40, 40),
-            navigationPaneTheme:  NavigationPaneThemeData(
+            navigationPaneTheme:  const NavigationPaneThemeData(
               backgroundColor: Colors.black,
             ),
           ),
-          home:  MyHomePage(),
+          home:  const MyHomePage(),
         );
       },
     );
@@ -117,3 +113,6 @@ Future<void> _updateAcrylicEffect(ThemeMode themeMode) async {
     final darkened = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
     return darkened.toColor();
   }
+
+
+  

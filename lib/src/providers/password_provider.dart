@@ -25,6 +25,7 @@ class PasswordProvider extends ChangeNotifier {
     if (_bsipassword.isNotEmpty) {
       Clipboard.setData(ClipboardData(text: _bsipassword));
       
+      
     }
   }
 }
